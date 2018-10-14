@@ -1,28 +1,38 @@
-string = """
-    Beautiful is better than ugly.
-    Explicit is better than implicit.
-    Simple is better than complex.
-    Complex is better than complicated.
-    Flat is better than nested.
-    Sparse is better than dense.
-    Readability counts.
-    Special cases aren't special enough to break the rules.
-    Although practicality beats purity.
-    Errors should never pass silently.
-    Unless explicitly silenced.
-    In the face of ambiguity, refuse the temptation to guess.
-    There should be one-- and preferably only one --obvious way to do it.
-    Although that way may not be obvious at first unless you're Dutch.
-    Now is better than never.
-    Although never is often better than *right* now.
-    If the implementation is hard to explain, it's a bad idea.
-    If the implementation is easy to explain, it may be a good idea.
-    Namespaces are one honking great idea -- let's do more of those!"""
+import json
+import os
+import tempfile
+import argparse
 
-di = dict()
-for word in string.split():
-    cleaned_word = word.strip(',.!-').lower()
-    if cleaned_word not in di:
-        di[cleaned_word] = 0
-    di[cleaned_word] += 1
-print(di)
+parser = argparse.ArgumentParser()
+parser.add_argument('--key')
+parser.add_argument('--val')
+key = parser.parse_args().key
+val = parser.parse_args().val
+
+storage_path = os.path.join(tempfile.gettempdir(), '2.txt')
+
+with open(storage_path, 'a+') as f:
+    f.write(json.dumps({}))
+
+with open(storage_path, 'w+') as storage_file:
+    dic = json.loads(storage_file.read())
+
+with open(storage_path, 'a+') as storage_file:
+    print(dic)
+    if val != None:
+        if  key in dic:
+            dic.update({key:dic[key]+', '+ val}) 
+            print(dic, '1')
+        else:
+            dic.update({key:val}) 
+            print(dic, '2')
+        storage_file.write(json.dumps(dic))          
+    else:        
+        if key in dic:
+            print(dic[key])
+        else:
+            print('None')
+print(dic)
+
+
+
