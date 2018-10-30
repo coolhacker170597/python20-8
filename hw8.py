@@ -13,6 +13,7 @@ class File():
             self.f.close()
 
         self.file_path = file_path
+        self.current_position = 0
 
 
     def __str__(self):
@@ -38,11 +39,16 @@ class File():
 
     def __next__(self):
         with open (self.file_path, 'r') as f:
+            f.seek(self.current_position)
+
             line = f.readline()
-            if line:
-                return (line)
-            else:
-                raise StopIteration
+            if not line:
+                self.current_position = 0
+                raise StopIteration('EOF')
+
+            self.current_position = f.tell()
+
+            return line
         
         
     
@@ -53,14 +59,6 @@ class File():
     def read(self):
         with open (self.file_path, 'r') as f:
             return(f.read())
-
-
-    
-test = File('test.py')
-##print(test.read())
-for line in test:
-    print(line)
-
 
     
 
